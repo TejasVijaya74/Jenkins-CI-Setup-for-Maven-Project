@@ -1,0 +1,18 @@
+pool:
+  name: LocalPool  # your self-hosted agent pool
+
+steps:
+  - checkout: self  # clone your GitHub repo into the agent
+
+  # Step 1: Build and Run Unit Tests
+  - script: mvn clean test
+    displayName: 'Build and Run Unit Tests'
+
+  # Step 2: Publish Test Results to Azure DevOps (after the reports)
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFiles: '**/target/surefire-reports/TEST-*.xml'
+      testResultsFormat: 'JUnit'
+      failTaskOnMissingResultsFile: true
+    displayName: 'Publish Maven Unit Test Results'
+
